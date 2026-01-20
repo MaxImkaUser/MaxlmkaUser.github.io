@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelTickets - покупка авиабилетов</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header styles */
+        header {
+            background: linear-gradient(135deg, #1a237e 0%, #311b92 100%);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            color: #00b0ff;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: #00b0ff;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-outline:hover {
+            background: white;
+            color: #1a237e;
+        }
+        
+        .btn-primary {
+            background: #00b0ff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #0091ea;
+        }
+        
+        /* Hero section */
+        .hero {
+            background: linear-gradient(rgba(26, 35, 126, 0.9), rgba(49, 27, 146, 0.8)), url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1335&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        /* Search section */
+        .search-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: -50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .search-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #1a237e;
+        }
+        
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-control {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #00b0ff;
+            outline: none;
+        }
+        
+        .search-btn {
+            grid-column: 1 / -1;
+            padding: 15px;
+            font-size: 18px;
+            background: #00b0ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .search-btn:hover {
+            background: #0091ea;
+        }
+        
+        /* Destinations section */
+        .section-title {
+            text-align: center;
+            margin: 60px 0 40px;
+            color: #1a237e;
+            font-size: 32px;
+        }
+        
+        .destinations {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .destination-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .destination-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .destination-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+        
+        .destination-content {
+            padding: 20px;
+        }
+        
+        .destination-content h3 {
+            margin-bottom: 10px;
+            color: #1a237e;
+        }
+        
+        .destination-content p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00b0ff;
+            margin-bottom: 15px;
+        }
+        
+        /* Results section */
+        .results {
+            margin-bottom: 60px;
+        }
+        
+        .flight-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .flight-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .flight-logo {
+            font-size: 40px;
+            color: #1a237e;
+        }
+        
+        .flight-details h3 {
+            margin-bottom: 5px;
+            color: #1a237e;
+        }
+        
+        .flight-details p {
+            color: #666;
+        }
+        
+        .flight-time {
+            text-align: center;
+        }
+        
+        .flight-time div:first-child {
+            font-weight: 700;
+            font-size: 20px;
+        }
+        
+        .flight-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: #00b0ff;
+        }
+        
+        /* Booking form */
+        .booking-form {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 60px;
+            display: none;
+        }
+        
+        .booking-form.active {
+            display: block;
+        }
+        
+        .booking-form h2 {
+            color: #1a237e;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* Footer */
+        footer {
+            background: #1a237e;
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: #00b0ff;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .flight-card {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .flight-info {
+                flex-direction: column;
+            }
+        }
+        
+        /* Active tab */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-plane"></i>
+                <span>TravelTickets</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link active" data-tab="home">Главная</a></li>
+                    <li><a href="#" class="nav-link" data-tab="destinations">Направления</a></li>
+                    <li><a href="#" class="nav-link" data-tab="search">Поиск билетов</a></li>
+                    <li><a href="#" class="nav-link" data-tab="booking">Бронирование</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button class="btn btn-outline">Войти</button>
+                <button class="btn btn-primary">Регистрация</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero section -->
+    <section class="hero" id="home-tab">
+        <div class="container">
+            <h1>Путешествуйте по всему миру с TravelTickets</h1>
+            <p>Найдите и забронируйте лучшие авиабилеты в Россию, Дубай, Америку, Италию и другие страны. Лучшие цены, удобный поиск, моментальное подтверждение.</p>
+            <a href="#search-form" class="btn btn-primary" style="font-size: 18px; padding: 15px 30px;">Найти билеты</a>
+        </div>
+    </section>
+
+    <!-- Search section -->
+    <div class="container">
+        <div class="search-container" id="search-tab">
+            <h2 class="search-title">Поиск авиабилетов</h2>
+            <form class="search-form" id="search-form">
+                <div class="form-group">
+                    <label for="from">Откуда</label>
+                    <input type="text" id="from" class="form-control" placeholder="Город вылета" value="Москва">
+                </div>
+                <div class="form-group">
+                    <label for="to">Куда</label>
+                    <select id="to" class="form-control">
+                        <option value="Россия">Россия (Москва, Санкт-Петербург, Сочи)</option>
+                        <option value="Дубай">Дубай, ОАЭ</option>
+                        <option value="Америка">Америка (Нью-Йорк, Лос-Анджелес, Майами)</option>
+                        <option value="Италия">Италия (Рим, Милан, Венеция)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="departure">Туда</label>
+                    <input type="date" id="departure" class="form-control" value="2023-10-15">
+                </div>
+                <div class="form-group">
+                    <label for="return">Обратно</label>
+                    <input type="date" id="return" class="form-control" value="2023-10-22">
+                </div>
+                <div class="form-group">
+                    <label for="passengers">Пассажиры</label>
+                    <select id="passengers" class="form-control">
+                        <option value="1">1 пассажир</option>
+                        <option value="2">2 пассажира</option>
+                        <option value="3">3 пассажира</option>
+                        <option value="4">4 пассажира</option>
+                    </select>
+                </div>
+                <button type="submit" class="search-btn">Найти билеты</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Destinations section -->
+    <div class="container" id="destinations-tab">
+        <h2 class="section-title">Популярные направления</h2>
+        <div class="destinations">
+            <div class="destination-card">
+                <img src="https://images.unsplash.com/photo-1513326738677-b964603b136d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Россия" class="destination-img">
+                <div class="destination-content">
+                    <h3>Россия</h3>
+                    <p>Откройте для себя красоты России от Калининграда до Владивостока. Исторические города, величественная природа и богатая культура.</p>
+                    <div class="price">от 4 500 ₽</div>
+                    <button class="btn btn-primary" onclick="searchTo('Россия')">Выбрать билеты</button>
+                </div>
+            </div>
+            
+            <div class="destination-card">
+                <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Дубай" class="destination-img">
+                <div class="destination-content">
+                    <h3>Дубай, ОАЭ</h3>
+                    <p>Роскошные небоскребы, золотые пляжи и ультрасовременная архитектура. Дубай - город будущего, который стоит посетить.</p>
+                    <div class="price">от 25 000 ₽</div>
+                    <button class="btn btn-primary" onclick="searchTo('Дубай')">Выбрать билеты</button>
+                </div>
+            </div>
+            
+            <div class="destination-card">
+                <img src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Америка" class="destination-img">
+                <div class="destination-content">
+                    <h3>Америка</h3>
+                    <p>От небоскребов Нью-Йорка до пляжей Калифорнии. США предлагают бесконечные возможности для путешествий и приключений.</p>
+                    <div class="price">от 35 000 ₽</div>
+                    <button class="btn btn-primary" onclick="searchTo('Америка')">Выбрать билеты</button>
+                </div>
+            </div>
+            
+            <div class="destination-card">
+                <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMWFhUXGBgbGBcYGBoaGxgYGBcYGBUdFxsYHyggHRolGxcXITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGy0lICUtLS0tLS8tLS0tLS0tLS0tLS0tNS0tLS0tNS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIALcBEwMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAEBQIDBgABB//EAEAQAAECAwYDBQYEBQQBBQAAAAECEQADIQQFEjFBUWFxgRMikaGxBjJCwdHwFFJi4RUjcoLxM5Ki0lMkY7LC4v/EABoBAAMBAQEBAAAAAAAAAAAAAAECAwAEBQb/xAAsEQACAgICAAUCBwADAAAAAAAAAQIRAyESMQQTIkFRMoEUQlJhcaHwI7HR/9oADAMBAAIRAxEAPwAMCJgRNSI8Aj0DzSTR6ikckRY0AYsIcQNNEFSdo9nydYVaY72hbgiSUxcqXHmCHsRIlKFYfXZIQQcVOMJJYhrIMRyK0XxSp7CJyQlRAqN4gqbAtttiZfvGpyGp+94zc+85k8jB3UEkF3y4D4uvhEJ5IwW+zpx455HrSGt4XshDuXPOj8/o8RsFrExL5EZj0I4GFUm7KAqJJqylFyH2GmX7R1oISQtB7ySH2IL/ACYRGPiny30Xl4Ncddj7DA08QXKWFJChkQ8UqTHevk82XwBlEe9nBARElSSzsW3gti0AzIGUIZz5SGDGuo2gCYltKRlNAeN+xThi2zWJcwkISVEByBsMz5iCbPYVrGJKSQKOI1PsdY1SyZmIAEEFJDkhnz0q3OJ5/ELHBtNWPh8PKckmnRmP4BPZ+zbZyASdgCXeAZ0kILKcqBqNG5jMxur+WJimRRUZC3WCYCXD7xyYvGyn9VI7cngow+m2LZyBiOEdBpFeGL5CxLW5FNRBV4TUrViSAHAdstvFmjthlbdV9ziyYkld7+AOVKBzUB0JbjSCrUZeBISpSlavk2jQMRESIo427JKdKqGMu/ZoTgfugAAABLN/SKwPOthW7wLhjxoTyYdpDrPPpsgsGIRaYjhh0mgNplZMQMEGXHmAiJykUjEqwR0WAjaOhORTiamdZCAC1DrAqkRYm9BkxaPPxKVaekPGT9yMoJ9EAImBEWj1JMNyF4ssTBKC4imW2sMrusqFg/zADscvGI5MsY9lseGUuhfMlBooKYaquxZJwkFtjnyeFdpsi0E4g0COeLdDy8PKrJJERt95iSmgxK2HEs/nAFttYQnJ1HIDM8ngew2SvaTS9SAW3LAcneurjrPPnr0rst4fw3L1S6ISbKucormEEBThRyDfmINaDlnwgqWpCVMl1KUFV8tqBwNtM4halzAZSUJwgrILH4SWyByNWPpDGz2EAMKAUD7ODzq7x57dnppUUIkFRlqWcJSKijZuHLacGiFtQCigzYk9KEt6mDbQpOEpDGhckskBmNesLbTessJCSt6BwgP0c/SMjWEXDP7qpaiBh7wJIAYmtTx9YYMDkQRuCCPERlpc4TGwS1KrqeHAQ5uCWp5gbDhY4ToSGOf9IPWOzDna9LODxHh07khkmXFs+XNCPdVgfYs7P6awwsZSwoMTlwr3SOMXKvNJTgP/AOQ2Q4xSeWX5Y2Qhij7yozZspbFRojLsxKXxJqfdKu9zbaHdoSgyyy6n4W+xCQ2Bq5xo5py7QZYYR6YWDOld0YkPUiCbPfS0DC9K0HyhWqWqlS0eFMFYo5F60JLLLG/SxxZ7agKxKLE6+95DKI2i3JUos3DRx9YTkRz04wr8Hj7HXjchK32FJDgh4A/D4Q0EkxZIs0xYVgSVYQ5bQfYho43j3y0aWaOTTjsVlMeNDFcjCjEUqJ8g2iuJhYqYniI6IZb0cs8VKz0iI4YsaPQiK2Ropwx7ggr8KWdqGITUYW+kJKa+SkYO+iIsygH0g6xXQpXva5Fn9IGszqNAYYyrXMQwdm8o58ltVF7OnG0tyWiR9myfjEex6q8Fv75jyObhm/Ujp8zD+lkDYxtEFXck6QzUiIFMdjOFMjYLiJoHfQA+EW2y51y2Ctnzy4HjE7vtoQsYnAyBBIz1cRpF3shykkKDUf57xxZc04SpbO3HihONsyMiUg/FXb6wTJk4VlJFR9iI3wlAWFSyOgIi65rKtasX36xKeS1yZ048fF8UMRMKSk5HyPGL7xtUtUoqmJdgaiCJ1lOA4gnKihmOkZf2qnNKRJB98krp8CKlxsS3hCKXJL/sbh6mZ+yoxkzFA1IAT+kkgHk2fnkYLkSyBiLlWpamEEkFsnoKxHsWWFlwkJUwJyUcApxcKPWKbZevadyUHGqzlzpQmn+YDtlFSDZkxEsBSlJcBsRyoGLDM126tC1V4LmKKZQLEvjWwAFKt7vjWsLpaQpTsZ6s8RLIBDk1OdGyfpHWycUBImKUS3+nL7oCXoCr3iG49I1Ua2wy0YWV20wzFg+6lyRVgG0c7gPWsUSSCCUyUo1Cph+Qf/5CGN3KlmTiwhAJybjw3IPOKLHcK7XNKgpkjM5gA+7hbcDyjO3pG0rbL7LKmIdapjvQYUhLODUE97zhpc4BXNAdgE1KsR1d3qS714gaRTbrs7BpaVlScLhxUOSMxpSg4xG6kdnOTUkKJSSdScvNoribjNKRLKlPG3EcKQ0VFEHTJbZ0iBEejZ5LBBLJyBhnJlrTQJOJTAnC4psd+W0SsilpGIPh12fSLl26ZqTTgKRDI5S0qLY1GO3YFbroUC4FTmOP14QFZ7tmLJZOWb09Y0Mq9lEVTiitV6Jfuo8YlHJniqqysseGTu6Exu4pZ0uXqHcEdInaUEJUCkoaoISB4trQeEHTr4wlgBxcCFdsvBanfLbSEcc03bKxlhgqRn5kxiS9fWGF1Xz2eJIS4WKv8oX2lDl2ihILx0SXKPFnOvTLkhjLvAupGheF06zFiWq8EpklWVDrBKpDjvZwqjX0juSkvUZ5Cykw7XJDJKTmAeXAtAttseoEXWEMmoLxeMmznnFImZAOZirsC9STs8FkR5hhuC7EWRpUVSyRlEigk6vxiwJi5VpUaPAeugp39QL2KvymOgnt1bx0C5fsGofLNVItSX70sHoNOWcU2u2ykHEJLprQJD8BnlC1c9cwgibTY5AtwixS5k1NDUZ90uedPOPPaV7tfc71paaf2Ftvt6FuQnCl27oZts4nZ5jJObHIs9OekHpsIWgpCa0c5c84DmW+YlHZgAABhQGnOL+Y+kv7IrGu2/6D7ts6JqVAO4cklmDB6+EMrsnAMksP1NXrGdkXj2YHd1B16sYaWW9ZKlOUFI2d68qRNxu+Uf4K21XGX8jq0AJDgkmMjfykdqlSqYUkqc6Aukc3PWH9ntyFKKR7tWfN9BwjIe0FoxzywdCCwD5lIGJ9kpJz45VjOlCgwTc7FlqtSprYyUoLsgVXMLuac67Cj6kQm2TEO8wQxaUk0LYQkLI9705xK0zwqWCgsqYD3j3SxUQQn8o7oYfOsE2S7CmUgOUnCBTIOVGoNNREWdK7KblM49qCHASwoyQSGwhuY5Q0ua6BPtCRORRyTmQoAEgHYOwY/OGSUy5UiSgkHvKJZ/eJHvPqyBTiIDsXtIizrKqKLEBIPXMU0ycQIpasMpPfEPveSEzlBKUgBqMB7qGoBDD2Zs6AiYXYFYJBNBTOuWvhGTtt+qnHtJclRcqJzYuK0JDANoesLnnqfFhGwWp25AV84dSqfIm43Dia72jmS1Te6twEgd3vVBLuQf3hLb5iAWC65jQmrihrCtUiYKrmMN8NOFV/WBzPkEuqdjOoCiroBLBhXt2MvSqH0/2jVogVp3j+zDU56RK6r1UqYgGalQVQimemHDxhHImyR7kpaq/+IjzW0N7ykSpUtMxKaoAVjBDJIrlmQasOTtFVllfZJ4Y10a0rUzAkAaDzeJptswa+MBK9orPhGJSQpgSKkp3FBmIU272jAUezWAgp1Sp3rlTaLOcKto544p3SY+FpWk4nz5V6QJPm4iTudIzH8UwgnG5UQUllGlXzFIqRaVF5naZcCwZtDQxvNgt0H8PN6s0k2QFZxQbK2TwpF9TA2FYWTmCkDwZovk37MFVoSR+kK82dvCG/EQF/CZfbYzMkEZRT+CA0iiXfySWMtWehB9WglN6SjmSniRTyeG82D9xHgyx9icuwlRdIrHkyzkFiKwZZsK6oUFa901+seTuJjKexXB1u7AFyTkQ0REgQUqZzMVKUdobmJwIlA2iJSI7GfymIGf8ApMDkMos9wx6JTxRNtbfCepEUfjVHJMDkHgMvwn6kx7AGOb+SOifN/qLeWv0l1js9omE9/shsxCfAQ3Su2I91cs0ag82P0iCbMrMOBANFKUUlQIclgX6ppHJJxm/Z/Y6YxlFdV9wpVvnpIKpaSdSA/VsngUW9h3kV5RBMxRLGZiTyUPNMeKuyea99uL5dTFoShF/BKcJyXQVMnBUsFIAfNiX6iJ2W1zaMnF/a9OcDWOxzJanwKI1bbiIcSLWhBcoYGoI1fcadIE5vpKwwgqt6K7dbezRMWBhUkFhma+75kRjZKDhURV0pzLFlAkgdVAnirgI299y5UyQpWoKCeQUHGTZPGNRaSolMhLgqJKzkDsN9KDaEc+XsVxwUboItfZy0oExgkJq51YA0rqDA868p8ykpDIyCjSgFHemQ49IF7OUCpTKnzE1JHugg5P7vDU8IJmzgVy5U6cEFTNKluPeoyl+9WuWF9oUeiFos7OLTPYgBkPhqWPdB72+Qi+ymXjez2dSgKlakhIzNQZlTn+WJWpaJPbTEpdfdSlRrUAHPxLRmbovmebR2a1OFhVGAYgEghtHDMXzgU2tDWk9mumpnTVKQkoloSwxMVq7w7xqyQA+bRkZM6WtXZrtSyp2YKwB9hgYRpLznYZa0mgmKz0KUpS4fKrpj5te1Zikp+GhO+8NGNiuVH02yWICWmUWwFRLGoZiou/jCG87zEtZRJSHTmo5eAzhxY0LKJYxMd2emHV8zGIvsqExCdTUka1p0z6wsVb2PN0rRpvZy/wATF9nMSkKLsRwzzcuwfpDy3JTgwlmUkAV8COOUYe5rOPxMoM2IkEB2bAfnG0tssFApUJSA+jGBJK9Bg21sza5c8qoFHQli3iS0H2G67QshwUhsy3DIHnF1qvhNnR3kYiolnYBw27l67aQyui85U8FYT3ksSCxZxoWZqQ3IVxFFqu4jCCSS5BBIHNqRKz3epiA7bYmgn2pvYScKZYdSg9ahIdgw4sYT3X7TzUq77KSc6AHo3zjWzJI0c241SkGY4YP8Qy1iuw3iZSyooKgpJDZUIq28H2md2ksnESFDfOgI9BA02zn8Mg4nPdozcKYaxv3NbSpgUiSohRSkk0NBkCkCrZZGPFoAqNaU6kVgy6EK7QPlhU5ZR92vzyhdNlzEWlZDpCVuARQuXB4AuNYDqKCpOTaR7Mmijkl/hJ91jmNqcdDBku8Jkss+JP6q6VrnFntBZxicfEk6DPpzEU2+QyQtNAoAs7sx7zcGMMrXQjkpLaHFivBM0d1gr8pPpuIs7JfAecZdaTLVhyUnMp50PpGqui1dqhy2JJY8dj1iinrZKWOuihdkUc1GIpusak9YazABk0CzVn83gIR5ZewVij+YGTZEDOOLDKIqQknXwMQUjZJMbkw8IhCbU2vlHQJ2Svy+cdA4x+BrfyQVeCxkzENoW5RKzXioUKyBrR2EDDGBkOqUno5DHy1hzd9qlEBKkJSs6FLAng5iL8RjelEr+HyLbkCTDKW5SVONSc9tYnItRRqXrxenpDaZYZZ+APwp6RUbtT/4wf7lAxlmhVO/6A8Uu9FCb0UwpX4tm4RWoBQYMOHGCUyGyxJ/uceYiX4YnJSX4gerRWORXonLE62Z295zEy1KZCWxbqUWwpHqf2hZNtOJABKUpdLykj3UqBX3laqISaD5vBF5SlIMzExUVrAIzc5nmUkDlCWYoqkqUaOVcMmA9VeEM3y2zJKKpDW5bUtXagsE4kBAADJBUXFNgnPiYUz0Y7TLJOIqmJ0INVCvID0g/wBm1DsSonVTP+lIAq35phim75K1WsLwkold5RozBKiGbOrfODRm7LvaVZlsxNcSiGp7wSH10OsZ72bk47fX4QW8G/8AtGpvOwzLWEdkAwQkEkt3nUovmH73kIj7MezSpM+YpaxiAyYsHIPU0G0BPQWthl+THYNRyPFgT/xj5uUuqYc+8r1LR9OmWXEgLIdTkNkCxIBoxeFiLnkoBwykPse9v+YnWMpUbiOJdiWAjuqIY5CtBtGCvp1WqXhBPdSCwy7yo2BnLUUHGpJTiKlKXhdww13i6VeclCcKyFqOpWFDPVz6RNUijbaMxdljmfjUdxSUpJ7ygrCBhVUlso286yoKSBaJZVgyyqDoTSM5br4kqW4SEUbI6E17o4+UeTrYnNAKmGgVq28Kx/YIva7UzEYVqSnvAguFAbuEEnJ/GFNzKNmmTDiBQQBQKIURwIBZifKC5lrKqdnMpkyNf92XSKLQFKfuLr+hq+MNEEtg94pXbJ8vA4KwEpBGpUWyJIDkcqmFAsakrUhdFoNehanUNDqyrnyloXLQxlkFJIcgjdwY0ci45c9AmqljtFgEkqVVRUcb1ZtQQBD/AME7rs66ZQMlILkEB67Ej5RdY19mpTuyXUNmauh9RE5dokSSqXNUpKkqZkpJFWIq3EwvvG8JSnZYLOxwrBbRxhzb0gbA9lNhvtYnDtCnAVOCkEEO4q5qC7V3i++b0kSpySqWvGsOSnMD3aglj+0Z6ROSFhRKSxdmV9I99rbZLVMkzZRyJBBDZkEeQIgY02qmbI1F3DRrbTeUpEkTFB00ZhUuzU3pwiKFSZkhJK2QASFFkgB6hVKHPyhRPH/oi5LS2OWgUDlSgBPhFciQTZpqRhICSQAKljoTrRPiIcSlQ5NjKihQUCycJzOIVB6VNYt9m0kLKVOMSeTlBbxwsTCa71r7BOaMJDF/AKo7VhhJtyRNBywqQcVcl0L7ZEeEC9hrRqFSBFZlxdMWfsQMsq3MTfL5GSj8ETLjxQMQUDuYrwncwPuPX7FtY6KnMeRjUfKv4lNSX7Rb/wBSn61hpYb4eYhcwOtJHfDOQNFb55584V34pImABLHCAQ2vTjELutISFEpBTXmTmkAHYipjpcE1aRxqTjKrPqViv0TBQ5Z8M4ONrV+Zox/s3b0zkrISU4WYO704CGk2eUyjMyYZPnoPOEjii1vso8sk9dDcrWfjeLJUomM4L8KZSFq95TgBmDpLKq3lxg613uBLBBBUoDCkAuScsjD1x6By5fIrvbGtRSipUThG5qR5DzgSRY0jFIWrClADlw6iSSpn/q20i5ctTJM1fZtiYA94vo5ObUihMuWTRC18SCdR+bCNNHhWUSDU2yzypgEtONCUYQAPiJBJNRqPEwRab2mLSUS7OUhQLvSmR0G8AybVMAOGWhCRRypqjgkc/iiE9cwhzNS6lMClOTkPVRO8KwpDKyoniXhxSkAVYkEt0DvkYrRZ5i1VnrYgk91TFucLbyt0qSlIXMnrJzSlZyG4BSIMu7sFSlKQScQDBznizrWjnYuCIX2sat0X3pIly2HbLDZjGkDINmdoUzJ9lUWKgs8Zoz6Ewf7RTZFnlCVLlIKiEk6BLCpJALklg3PLVDct7y5quzUgJXo1QRroKiJxtpui7pNJsbz5cuUxMtBfLCozKbkIBpxMeKtQX7sivCUR6kQ6tGaQT3UygfRyfWMVeftHNxfyzgTpQEnicQLdPOAvU9B1FbH6LUtTJEqYOSUf9nhtapK5aU4MSyoP8Kaa5vXKnGM97O36qaoSpoDn3VCmQdiBTKNV2IIRXIGvJoSdpDwptUxGqbOf/SFd5jeiIjbJc6vdSzn41H0AidtRNmLOaEuQACRuM8zpHsoTJa1YiVIxEEGrVzHKtIhHxCbqyrxa6DrosxAUSJalMB31FjirQEFmffwhnYpzHC6HBqE91IrmATQRCTZw5Aolg58YV3hfEiSvCx71XYl8tqmOuOR1o5J4rZde9keespUgkgOXpk1GPCE0+wKCjlUVrQw6lTUK7wqKMX+RB8CIut9vlS041lgzVJcngBrwjR+TSk0q9jE2OU5ICagtWmrCkTt91LXLIKACFBWbGjpYO35/KG91XvIXOIDpVidIUCmuesOrZa8UtaSFNocTlgeQegiydEGrFd0oxyFySKqQ2eXdKS7Z56bCKfZhwkSljCSlSSkvoNukXXbKSJockpLhilqkOItnSwJgKSWxBgAXbFkC2bP4iGsVohYDhTMQRVIyzqg6cmiKwFgLAzBD0NUnEOtTF60nGFoWGPEHPPWsDFBRiIR7qsWu9WHERqAmbCyTwqWguCcIeurVimdaUh3UkNnUUjCX1aZaEkqSvtFEYVA92gZlDWg8zCRN7MXAr97axvLsDy8dH0WffchOcwHkCfQR4q8kmWZkshbUYFq7ZZx88TbClbkJNdgQaen1h/dN9ShKmpWoSwSVBg9TRg1RlpvtB8pAWZly/ahbn+WBzf8AaOjOTLwW5qTxwAv1wx7DeWhPNfyLr2m9vOKk0JGuaiSSDVtCOggGcgpUUqoRn4P1hgq51AlQmudCXFXz1j2dZFKBxpSpX50liWDB3g3x17CfVbfZdc16dmAjJy4I+E5AmNDfV44EJSJy5hUxXLIJABDpqc/2jFyZa5RxGWSQXB0DcoutN4TFrxGisIFKOE9YTy3z5LodZKhTNEi0IWhCXpLSwPFRKleZbpDKzS3mkpIwo93CdAySoD+kmu5EYZFrWAxZyaGjjP6+UaC6r9CQoLDnAwYNmVP5FI6RnCVjxyxqhraFBPZlAdUxIxFdTgYkNsS79IAnzZnaowkgIKU4Qc8sZIGevhHtst6FTcWFQSEJSA+5CRR2FCIEu62pE4LKHGJam7rMxI03IhuIOZZfM/FKEskAB1EcVEkPyDeMW+zySJCV0KUqUAHrSo8CfKBbdanM1TMWYdBlBd1p7OxIWQ7laiDqCpgeoEZx0FS9Viq/J3dUavvpwaG3sfJP4YLCz7zMafFk7/bxnbztGNhkPnGkuS2iXZ5aShwVE5s+ZGkbh6aAp+qyj2rtpUVOMPEFxq2bbwj9mZX81Barlv8Aac96QX7QWkKfukHm4p0ifswh5kumRXz91ULx4xKKXKezaXiCEKAI/wBNi4OvWMPaZAMw5UaNhe1sKQpOEVQmr5VP0jLADESTn1iSi6OhyVhHs7K/9SjSp2LUNc84+iyrMSEsdwch60jBXMEiclQxGvADJs6x9DusYmxAUfw3JLMOOUcfiZcVs6cSsPui5zMwgpOIZcQPpFt4+zrKOLuir7l6lvvSDLnvZCFgS2LUJ3qzCKfaC9AvEogHJw2mnFo+fqHHt8769qL8sryV+WhbaJUtNAQe7qcuQFYyN92NMxKwlanFRhBegqHLZinhDSfeNUskZEU+h+sJLTeBDqGHIUY/9o+g8LiqJzZpib2et6ZalAJJSRVzqMi3J4K9sLU5lMAEhRpuSBXgRXxhfNQyjMQ3ectQM4Y5ncmKb3tSpksEtQg05ER3xxK7OOeR1RVaZyu0TsxZqF3pGtl29S5L4e8RvuACct3jCKtJxpKqgUHhWGkm+1IBS1Pv6w/l/BPzau2eWC0TJM91KKgVDECcw5HIfYgy8rZMFqIdkYRgBy1BNcy5Jz0hZNt2NQcpANC6QW8YqtFoKsBJTRx0cD6xRQJSyfBp70vwoloVKCQolljMP3nYggguGjkXwntEpwdxSAcq4nNH2Zozq7QVSyDwOQ2/zF6O8mWrUOPOnpAcEZTbDL5mibZpSsiAkl8mIWk1arKTrvCmwhIPdUCerjxAhrNs2OzTEg+7jFdWUJiG6P4wosd2LSapSktmpbapcCnHXY7Rl0LN7sInTQQx5xQqzgBwoPVxlltuY5dnViNZbsSwqNadRV8qiKk2BZJ/mAB83AFNA+nDlDE3IKky5ZSCVsekdAH8M/8AdT0f5COjAsYmcurpNOH78YpmdoT3dM2IPwkjXrF8q77QHGKWQdwDnr7sXfgrV+eWKklkpq/EJfhBpfAbYBMRM7NKDUlnJzOunQQPKs4c4ixDDprmNxr/AIdy7HaHBK5dOFKuKgAPQx5JuaYFleJFXLVLPtBSS6A27EsyVSgU9PiDeAHziMlwXY58fvSNdMsWP3kJ6f4EUKuUHKGpG2IzaTidjmKcgfmR4RCyzmUSQcm8TDpVxHcecQNxK0IP9xgcTWLirElQIV3lFjlqN6QyvK8EplIlpqyUgkF/dSRRuJHhEUXDMGXPOOm3HMNW8x84HEZSM7NqRnyaHItgSiUkiobXVqvFguKZ+VXimPf4DN/KfFMajKTFNqmGYWAZ34w29mJWC0doqqWVnQVoN9zpHouWYD7qvKCE3fNHwqHIfSFaQykxlf1tQZhCUD3UszHIl8ucZ7CrEWSRWkFTLumlRLLc8Ikm7ZgzC/AwriVjLey65wUrC1USkuTrTbbwjRTr8cAJASjUAhzxNIzf4OZsvwMTlWNeyv8AbHO8CbtnT57qkaOx2hYUlQcAl6NuSBnsx6x5MtMxShhL8ykAhnPxa/KOuO6pk5XeUtKU6nU5UxHQRdf3s8uQypZUd3Y0OXu/dI4XhwrJ+50+dPiAotfeQCkUNX3flCm+bwWouW91qAZVZ2j2ZJWXJJ8IBm2JZNfSPShCjhnO3YPbJ7y0UZkkGn61n0IiUy0lchMoobCC3c72bh9S9Iiuwq+0x34VTvXwi6RGc7CFXHKKASpbjRwGo+qYUWkJej1Y6cvlDFVnOxgdVgrTho8MkRbsBlWkpUFpJxguCw9MsohbLSVBWIpxYiTRiXroGYvDL8AftMcLERr5QwLJyJSVSyzuoFq01b1EE3Jdy1OCpDAue8dqMw4GAxYj+YxdZ7HhLuTwo0LxNZo5s6VIQStIVjUzIUTTARkWagMBWi6LOs4kTAEqTTvKNCK1Jeo3gOZZwpLO2VWrTaGNlQEpSl8gPKkbiZysXzrolJZnX/SoU5uofOKhdMvNiDo5JY/2kiHwI3+/CK+2Rr8jBoDZnpVgSB3yArUV6a7NHQ9Jlmpw9R+0dGoAIgK2yNa6HI/e0XpCnzHMaiAxOND8vDhFoUzCvDhGoawsO3vARMc/KBRO8dRSvGLJE+lCW+6FhWNRrC5Y3V5RYg8YC7UjSkTTO3+/CNRrDABFmEbU3aAQdSY97b7+/rGo1hyVDKJFW0Ay7S+bv97xNMwjf19Y1GsKMeBWsUJWdQHizmRxzMYJaJnOJJLxSB4eUQM0HIhvnACGKmNzipU/jAZ8+L/P9o6WSVNkNXLeECkg22HImE0B+nWHd2WRDY14m37ofoatC+65IJqHTR8KkKJO60vQc4cFZDMDgD5oArlQOWrTjtHB4nLfpR24cdbY8spDn3nAcAsHHD6x5apifdFOhLuHzJLDaFVkCKOtqknvEKHFi5GeXGjRfPsNWSoA/mJBWR1LAe7WnKPN4I6L2JbzkBRxIofXm2ucKccaK1SwlJONAKg7rISqmZ0Dtux+SC2ywAVahW5qNM/WPU8Nk1TObPC9ogRFfWKPxA/YZ+seLmPrpHcjiZfHFHHzihKh9k582jif2r6QRSwjnFa+OXIR4V9OY158ohMJI0LiCA5cpJ+EeEUTJCM29fSLjMObxSFnf5+kYxWqSN4q7P758ovxHr8+kd2n+QPWMYHVQZ+cVKVrn9tWCFLrxzikqerDwHnGAUd79XSOiShz/wCMewDA0v3SGqC1PrFkovpUU5HnAqaKDa8zlw+8ouKSGPFiHI9YwwUhRVQsCNPvQxchGoYHbQ7f5gRSGqln6gnqDEyoM9OB+zGMEt+4z5xPEN/T5wIJz5CvMftFiVkmjhTaFvnWMYLxgainJx0jkTwz16NXpvA5OZIIO6iVVj38W5H34PlGMgn8Sn8x849ccD6+GcUFQOnjp4ftEULByGrUz8maCYNQsgs7jZgfWo5PBCJlMjTfTpAPbnLFlpqPQxzvnpuD5VLQDWEm0A0euTO/pEZiDu/h55wOibX9ifA6dYtG6gyd2evoOsZ0gq2RTJfYjVshzZ2hrYLNjAVhTh4Mx55udoCsRTMUO6VMckJxKIH9ICh4w1Fmk4ipHaKUaBIU6xvjBAXh4BXCObLkOrFjGkqUUii1BqMyji/pSioFRUvBKJiSnGy6VZlJSWehWWAPhCsFDABQlrNMJAl4qVYH+ad6qJyYwRZpxSlisGjBBHZ4uGGa00n+948+as60xhZJwxd2WG0AS6A/5RKJUo01I1j20ownCDgJJIBKjiYjF3a1qKqdteK60Xoph26CAK4ROwePbB1M2QJ5R6bzlhCmEzvvQy5iAD+qZmRpSnCJ8JfAbRObMUpgAmYTkQpWb5KDENvh8IDvILxOoYcIr3X7x2FS7H83rFH8RlFQSFJbMlAJQToU4AcJYajSqoI7eVNHZoWQpIJGDCoEEsSpKMi/7ReCcX0K2mtCG1y1DvMAFZZ/N/APFDvR8uAPrWGAs+eJaA2WJ8df0e984EtMnDoWOWJ0f8Vd4+Aj0YTXRwZMbu0UKUw+Qfw2j2YonKu9D/iPCOHUUB8axSqadadDXqYrZKi7f5/WOlzqgEsN6s/LKsDpmBmDPwd/OIKRXhsxLeH3WMCguYrOr9KHjpFBnUzr4emcRM2tctKtEHd9OcEBYFuaa8fTOIYwC5HmPT6bxQoitD8vPSPO0DU+Z8xGMXKLv/iBlTGHDmetIiucOI6fWIy11rVOuh86RjEyo7eZjo8V2X5l/wC1P/YR0AwIqYA30H35RNUwZUHj+0eR0AJOUol65bfVokEh+HM/KPY6MY4zAGb09XNYsExvhru4HpHR0F9mXRYmYclEK4uWbkRF6FKQNG4Bo9joz0ZbIJm5kjz+QLR4Jo+BKUuakO5bN6MY6OggZJM0qp3fBomUNrX74x0dGZkXSgC2b7Cj7/bwQmW5CXKHyDBWLqTSOjolJsvBKhsZgRhlLlKSVPhWJxAOHcAKqzZpOecezLOZvdC0TAM8KDLUBoalieOcdHRxt+nl/uzsSuXH/dDCxWSYUmXJW0sKZfapQcRZyApAc55lL1zhZaLAqQp+zEoYSSZSlHE3BSg6MqGtY6Ojjx5pebw9mVnjXl8giwXvMIQiQMBVTEkl1EZgJUcL0zUS3p7ZJ6Zq1JwFczMqClJLpdyUYxLUX5CkdHR0zhGPKvZX/bIwk5NX7/8AgZLtKpy0pBGGoxKCUTCRmHShQApkG+vloVKlKwzwgYvddJWFkalmIalGEex0Sgv+XguistY+QKlClIJlS5ak1AUFGW4BqAhSVpYFxVjnzhfJtiEvLUkYgciGYmtMJKdNAI6Ojpx7bXwSyajF/JQqQA5wgknQ69QGHWF66q4g1AJBHVj6x0dHTjdshlikrIg6nlFZWWIzrqT8/pHR0WRzSIFex1FPtorKWJw5bUpwqI6OgiFfaDXk5f5H5RGWpzoT970jo6MYi1TU+npEDSumvHxy6R7HQDHhrX5mOjo6CY//2Q==" alt="Италия" class="destination-img">
+                <div class="destination-content">
+                    <h3>Италия</h3>
+                    <p>Искусство, история, кухня и романтика. Посетите Рим, Венецию, Флоренцию и насладитесь неповторимой атмосферой Италии.</p>
+                    <div class="price">от 15 000 ₽</div>
+                    <button class="btn btn-primary" onclick="searchTo('Италия')">Выбрать билеты</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flight results -->
+    <div class="container results" id="results-section">
+        <h2 class="section-title">Найденные рейсы</h2>
+        <div id="flight-results">
+            <!-- Flight results will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Booking form -->
+    <div class="container">
+        <div class="booking-form" id="booking-tab">
+            <h2>Бронирование билета</h2>
+            <form id="booking-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first-name">Имя</label>
+                        <input type="text" id="first-name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="last-name">Фамилия</label>
+                        <input type="text" id="last-name" class="form-control" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Телефон</label>
+                        <input type="tel" id="phone" class="form-control" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="passport">Номер паспорта</label>
+                        <input type="text" id="passport" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="flight-selected">Выбранный рейс</label>
+                        <input type="text" id="flight-selected" class="form-control" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="card-number">Номер карты</label>
+                        <input type="text" id="card-number" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="card-expiry">Срок действия</label>
+                        <input type="text" id="card-expiry" class="form-control" placeholder="MM/YY" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="search-btn">Забронировать и оплатить</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>TravelTickets</h3>
+                    <p>Лучший способ путешествовать по миру. Мы предлагаем самые выгодные цены на авиабилеты и отличный сервис.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Направления</h3>
+                    <ul>
+                        <li><a href="#">Россия</a></li>
+                        <li><a href="#">Дубай, ОАЭ</a></li>
+                        <li><a href="#">Америка</a></li>
+                        <li><a href="#">Италия</a></li>
+                        <li><a href="#">Другие страны</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Помощь</h3>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Правила бронирования</a></li>
+                        <li><a href="#">Возврат билетов</a></li>
+                        <li><a href="#">Контакты</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> +7 (800) 555-35-35</li>
+                        <li><i class="fas fa-envelope"></i> info@traveltickets.ru</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Москва, ул. Примерная, д. 10</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 TravelTickets. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links and tabs
+                document.querySelectorAll('.nav-link').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Get the tab to show
+                const tabId = this.getAttribute('data-tab');
+                
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.style.display = 'none';
+                });
+                
+                // Show the selected tab
+                if (tabId === 'home') {
+                    document.getElementById('home-tab').style.display = 'block';
+                    document.getElementById('destinations-tab').style.display = 'block';
+                    document.getElementById('search-tab').style.display = 'block';
+                    document.getElementById('results-section').style.display = 'block';
+                    document.getElementById('booking-tab').classList.remove('active');
+                } else if (tabId === 'destinations') {
+                    document.getElementById('home-tab').style.display = 'none';
+                    document.getElementById('destinations-tab').style.display = 'block';
+                    document.getElementById('search-tab').style.display = 'none';
+                    document.getElementById('results-section').style.display = 'none';
+                    document.getElementById('booking-tab').classList.remove('active');
+                } else if (tabId === 'search') {
+                    document.getElementById('home-tab').style.display = 'none';
+                    document.getElementById('destinations-tab').style.display = 'none';
+                    document.getElementById('search-tab').style.display = 'block';
+                    document.getElementById('results-section').style.display = 'block';
+                    document.getElementById('booking-tab').classList.remove('active');
+                } else if (tabId === 'booking') {
+                    document.getElementById('home-tab').style.display = 'none';
+                    document.getElementById('destinations-tab').style.display = 'none';
+                    document.getElementById('search-tab').style.display = 'none';
+                    document.getElementById('results-section').style.display = 'none';
+                    document.getElementById('booking-tab').classList.add('active');
+                }
+                
+                // Scroll to top
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            });
+        });
+
+        // Flight data
+        const flights = {
+            "Россия": [
+                { airline: "Аэрофлот", from: "Москва", to: "Санкт-Петербург", departure: "08:30", arrival: "10:00", price: 4500, flightCode: "SU 1001" },
+                { airline: "S7 Airlines", from: "Москва", to: "Сочи", departure: "14:45", arrival: "17:15", price: 5200, flightCode: "S7 2105" },
+                { airline: "Победа", from: "Москва", to: "Калининград", departure: "11:20", arrival: "13:10", price: 3900, flightCode: "DP 453" }
+            ],
+            "Дубай": [
+                { airline: "Emirates", from: "Москва", to: "Дубай", departure: "23:40", arrival: "05:30", price: 28500, flightCode: "EK 132" },
+                { airline: "Аэрофлот", from: "Москва", to: "Дубай", departure: "15:20", arrival: "21:10", price: 25400, flightCode: "SU 522" },
+                { airline: "Flydubai", from: "Санкт-Петербург", to: "Дубай", departure: "09:15", arrival: "15:05", price: 26700, flightCode: "FZ 984" }
+            ],
+            "Америка": [
+                { airline: "Delta Airlines", from: "Москва", to: "Нью-Йорк", departure: "12:30", arrival: "16:45", price: 42500, flightCode: "DL 456" },
+                { airline: "Аэрофлот", from: "Москва", to: "Лос-Анджелес", departure: "10:15", arrival: "14:30", price: 47800, flightCode: "SU 102" },
+                { airline: "American Airlines", from: "Москва", to: "Майами", departure: "14:50", arrival: "20:15", price: 51200, flightCode: "AA 789" }
+            ],
+            "Италия": [
+                { airline: "Аэрофлот", from: "Москва", to: "Рим", departure: "07:45", arrival: "10:20", price: 15600, flightCode: "SU 2410" },
+                { airline: "Alitalia", from: "Москва", to: "Милан", departure: "13:20", arrival: "16:00", price: 14200, flightCode: "AZ 774" },
+                { airline: "S7 Airlines", from: "Санкт-Петербург", to: "Венеция", departure: "11:10", arrival: "14:25", price: 16800, flightCode: "S7 2651" }
+            ]
+        };
+
+        // Search form submission
+        document.getElementById('search-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const destination = document.getElementById('to').value;
+            const departureDate = document.getElementById('departure').value;
+            const returnDate = document.getElementById('return').value;
+            const passengers = document.getElementById('passengers').value;
+            
+            // Show results section
+            document.getElementById('results-section').style.display = 'block';
+            
+            // Generate flight results
+            generateFlightResults(destination, departureDate, returnDate, passengers);
+            
+            // Scroll to results
+            document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Function to generate flight results
+        function generateFlightResults(destination, departureDate, returnDate, passengers) {
+            const flightResults = document.getElementById('flight-results');
+            flightResults.innerHTML = '';
+            
+            if (flights[destination]) {
+                flights[destination].forEach(flight => {
+                    const totalPrice = flight.price * passengers;
+                    
+                    const flightCard = document.createElement('div');
+                    flightCard.className = 'flight-card';
+                    flightCard.innerHTML = `
+                        <div class="flight-info">
+                            <div class="flight-logo">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            <div class="flight-details">
+                                <h3>${flight.airline} - ${flight.flightCode}</h3>
+                                <p>${flight.from} → ${flight.to}</p>
+                                <p>Вылет: ${departureDate} в ${flight.departure}</p>
+                            </div>
+                        </div>
+                        <div class="flight-time">
+                            <div>${flight.departure} - ${flight.arrival}</div>
+                            <div>В пути: ${calculateFlightTime(flight.departure, flight.arrival)}</div>
+                        </div>
+                        <div class="flight-price">${totalPrice.toLocaleString()} ₽</div>
+                        <button class="btn btn-primary" onclick="bookFlight('${flight.airline}', '${flight.flightCode}', '${flight.from}', '${flight.to}', '${departureDate}', '${flight.departure}', ${totalPrice})">Выбрать</button>
+                    `;
+                    
+                    flightResults.appendChild(flightCard);
+                });
+            }
+        }
+
+        // Function to calculate flight time
+        function calculateFlightTime(departure, arrival) {
+            const depParts = departure.split(':');
+            const arrParts = arrival.split(':');
+            
+            const depHours = parseInt(depParts[0]);
+            const depMinutes = parseInt(depParts[1]);
+            const arrHours = parseInt(arrParts[0]);
+            const arrMinutes = parseInt(arrParts[1]);
+            
+            let totalMinutes = (arrHours * 60 + arrMinutes) - (depHours * 60 + depMinutes);
+            
+            // Handle overnight flights
+            if (totalMinutes < 0) {
+                totalMinutes += 24 * 60;
+            }
+            
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            
+            return `${hours}ч ${minutes}м`;
+        }
+
+        // Function to search to a specific destination
+        function searchTo(destination) {
+            document.getElementById('to').value = destination;
+            document.getElementById('search-form').dispatchEvent(new Event('submit'));
+            
+            // Switch to search tab
+            document.querySelectorAll('.nav-link').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector('[data-tab="search"]').classList.add('active');
+            
+            // Show appropriate sections
+            document.getElementById('home-tab').style.display = 'none';
+            document.getElementById('destinations-tab').style.display = 'none';
+            document.getElementById('search-tab').style.display = 'block';
+            document.getElementById('results-section').style.display = 'block';
+            document.getElementById('booking-tab').classList.remove('active');
+        }
+
+        // Function to book a flight
+        function bookFlight(airline, flightCode, from, to, date, time, price) {
+            // Show booking form
+            document.getElementById('booking-tab').classList.add('active');
+            
+            // Set flight information in booking form
+            document.getElementById('flight-selected').value = `${airline} ${flightCode}: ${from} → ${to}, ${date} ${time}`;
+            
+            // Switch to booking tab
+            document.querySelectorAll('.nav-link').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector('[data-tab="booking"]').classList.add('active');
+            
+            // Show only booking form
+            document.getElementById('home-tab').style.display = 'none';
+            document.getElementById('destinations-tab').style.display = 'none';
+            document.getElementById('search-tab').style.display = 'none';
+            document.getElementById('results-section').style.display = 'none';
+            
+            // Scroll to booking form
+            document.getElementById('booking-tab').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Booking form submission
+        document.getElementById('booking-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const firstName = document.getElementById('first-name').value;
+            const lastName = document.getElementById('last-name').value;
+            const flightSelected = document.getElementById('flight-selected').value;
+            
+            // Show success message
+            alert(`Спасибо, ${firstName} ${lastName}! Ваш билет на рейс ${flightSelected} успешно забронирован. На вашу почту отправлено подтверждение.`);
+            
+            // Reset form
+            document.getElementById('booking-form').reset();
+            
+            // Switch to home tab
+            document.querySelectorAll('.nav-link').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector('[data-tab="home"]').classList.add('active');
+            
+            // Show home sections
+            document.getElementById('home-tab').style.display = 'block';
+            document.getElementById('destinations-tab').style.display = 'block';
+            document.getElementById('search-tab').style.display = 'block';
+            document.getElementById('results-section').style.display = 'block';
+            document.getElementById('booking-tab').classList.remove('active');
+            
+            // Scroll to top
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+
+        // Initialize with some flight results
+        window.addEventListener('DOMContentLoaded', function() {
+            generateFlightResults("Россия", "2023-10-15", "2023-10-22", 1);
+        });
+    </script>
+</body>
+</html>
